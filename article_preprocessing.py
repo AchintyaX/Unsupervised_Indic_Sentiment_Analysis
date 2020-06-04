@@ -7,6 +7,7 @@ import spacy
 from spacy import displacy
 from collections import Counter
 import en_core_web_sm
+from google.cloud import translate_v2 as translate
 
 nltk.download('stopwords')
 nltk.download('punkt')
@@ -86,3 +87,21 @@ def tokenize_hin(article):
     tokens = [token.text for token in doc]
     
     return tokens 
+
+#  Getting Synonyms  for a given word with polarity, and word origin 
+def get_synonyms(word, polarity):
+    words = []
+    for sysnet in wordnet.sysnets(word):
+        for lemma in sysnet.lemmas():
+            sys = {}
+            sys['origin'] = word
+            sys['word'] = lemma.name()
+            sys['polarity'] = polarity 
+            words.append(sys)
+    return words 
+
+# Get translation 
+def translator(word, lang_code):
+    translate_client = translate.Client()
+    translation = translate_client.translate(word, target_language=lang_code)['translatedText']
+    return translation 
