@@ -1,4 +1,5 @@
 import nltk 
+import re 
 from re import sub 
 import string 
 from nltk.tokenize import word_tokenize
