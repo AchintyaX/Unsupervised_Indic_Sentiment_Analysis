@@ -4,7 +4,9 @@ from re import sub
 import string 
 from nltk.tokenize import word_tokenize
 from nltk.stem import WordNetLemmatizer
+from nltk.corpus import wordnet 
 import spacy
+from spacy.lang.hi import Hindi 
 from spacy import displacy
 from collections import Counter
 import en_core_web_sm
@@ -106,3 +108,25 @@ def translator(word, lang_code):
     translate_client = translate.Client()
     translation = translate_client.translate(word, target_language=lang_code)['translatedText']
     return translation 
+
+# Get the synonyms 
+def get_synonyms(word):
+    syn = []
+    for synset in wordnet.synsets(word['SynsetTerms']):
+        for lemma in synset.lemmas():
+            syn.append(lemma.name())
+    syn = set(syn)
+    synonyms = []
+    try:
+        syn.remove(word['SynsetTerms'])
+    except KeyError:
+        pass
+    for i in syn:
+        article = {}
+        article['parent'] = word['SynsetTerms']
+        article['word'] = i
+        article['pos'] = word['PosScore']
+        article['neg'] = word['NegScore']
+        synonyms.append(article)
+    synonyms = pd.DataFrame(synonyms)
+    return synonyms 
