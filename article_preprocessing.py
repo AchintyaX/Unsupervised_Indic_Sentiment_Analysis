@@ -1,3 +1,4 @@
+import pandas as pd 
 import nltk 
 import re 
 from re import sub 
@@ -130,3 +131,17 @@ def get_synonyms(word):
         synonyms.append(article)
     synonyms = pd.DataFrame(synonyms)
     return synonyms 
+
+
+# loading the dictionary of ground positive and negative words rem
+def load_dicts(filepath):
+    df = pd.read_csv(filepath)
+
+    word_map = pd.DataFrame()
+    word_map['word'] = df['hindi']
+    word_map['pos'] = df['PosScore']
+    word_map['neg'] = df['NegScore']
+
+    word_map = word_map.to_dict('recorc')
+
+    return word_map
