@@ -145,3 +145,10 @@ def load_dicts(filepath):
     word_map = word_map.to_dict('recorc')
 
     return word_map
+# loading the simple spacy tokenizer for english 
+def spacy_tokenizer(text):
+    nlp = en_core_web_sm.load()
+    doc = nlp(text)
+    tokens = [token.lemma_ for token in doc]
+    tokens = [i for i in tokens if i != '-PRON-']
+    return tokens 
